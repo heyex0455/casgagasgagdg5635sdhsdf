@@ -42,7 +42,7 @@ local Button = Tab:CreateButton({
    -- Initialize the settings table with necessary parameters
 _G.Howl = {
     Aimbot = {
-        Keybind = Enum.KeyCode.V,  -- Default key to toggle aimbot lock
+        Keybind = Enum.KeyCode.Q,  -- Default key to toggle aimbot lock
         AimBotSkid = 0.187,
         Prediction = 0.1247724521,
         ShakeEnabled = false,
