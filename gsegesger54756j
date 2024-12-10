@@ -1,0 +1,187 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "ex0.cc",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "ex0.cc",
+   LoadingSubtitle = "by not ex0",
+   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "ex0.cc"
+   },
+
+   Discord = {
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local Tab = Window:CreateTab("AIMLOCK TAB", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "HAHAAHAH",
+   Callback = function()
+   -- Initialize the settings table with necessary parameters
+_G.Howl = {
+    Aimbot = {
+        Keybind = Enum.KeyCode.C,  -- Default key to toggle aimbot lock
+        AimBotSkid = 0.187,
+        Prediction = 0.1247724521,
+        ShakeEnabled = false,
+        Shake = 0,
+        Amount = 0.160145,
+        Style = "Back",  -- Aim style
+        Direction = "Inout",  -- Direction of aim movement
+        TargetPart = "HumanoidRootPart",  -- Default target part to aim at
+    },
+    ['HitBox'] = {
+        Part = "HumanoidRootPart",  -- Targeting box to aim at
+    },
+    ['Resolver'] = {
+        Enabled = true,
+    },
+    ['Silent'] = {
+        Prediction = 0.1279,
+        Detection = {Close = 27, Mid = 38, Far = math.huge},
+    },
+    ['FieldOfView'] = {
+        Enabled = false,
+        Size = 240,
+        Color = Color3.fromRGB(255, 255, 255),
+        Transparency = 1,
+        Filled = false,
+    },
+    ['Air'] = {
+        Enabled = true,
+        AirPart = "Head",  -- Target part for players in air
+    },
+    ['Checks'] = {
+        TargetDeath = true,
+        PlayerDeath = true,
+    },
+}
+
+-- Error handling for script execution
+local success, errorMessage = pcall(function()
+    if not _G.Howl.Loaded then
+        local userInputService = game:GetService("UserInputService")
+        local players = game:GetService("Players")
+        local client = players.LocalPlayer
+        local locking = false
+        local camera = workspace.CurrentCamera
+        local runService = game:GetService("RunService")
+
+        -- Check if player is in an anti-aim state
+        local function checkAnti(Plr)
+            if Plr.Character.HumanoidRootPart.Velocity.Y < -70 then
+                return true
+            elseif Plr.Character.HumanoidRootPart.Velocity.X > 450 or Plr.Character.HumanoidRootPart.Velocity.X < -35 then
+                return true
+            elseif Plr.Character.HumanoidRootPart.Velocity.Y > 60 then
+                return true
+            elseif Plr.Character.HumanoidRootPart.Velocity.Z > 35 or Plr.Character.HumanoidRootPart.Velocity.Z < -35 then
+                return true
+            else
+                return false
+            end
+        end
+
+        -- Function to get closest player to cursor
+        local function getClosestPlayerToCursor()
+            local closestDist = math.huge
+            local closestPlr = nil
+            for _, v in ipairs(players:GetPlayers()) do
+                if v ~= client and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0 then
+                    local screenPos, cameraVisible = camera:WorldToViewportPoint(v.Character.HumanoidRootPart.Position)
+                    if cameraVisible then
+                        local distToMouse = (Vector2.new(userInputService:GetMouseLocation().X, userInputService:GetMouseLocation().Y) - Vector2.new(screenPos.X, screenPos.Y)).Magnitude
+                        if distToMouse < closestDist then
+                            closestPlr = v
+                            closestDist = distToMouse
+                        end
+                    end
+                end
+            end
+            return closestPlr
+        end
+
+        -- Toggle locking mechanism based on key press (C by default)
+        userInputService.InputBegan:Connect(function(keygo, ok)
+            if not ok then
+                if keygo.KeyCode == _G.Howl.Aimbot.Keybind then
+                    locking = not locking
+                    if locking then
+                        local target = getClosestPlayerToCursor()
+                        if target then
+                            -- Lock to the selected player's target part
+                            _G.Howl.CurrentTarget = target
+                        end
+                    else
+                        _G.Howl.CurrentTarget = nil
+                    end
+                end
+            end
+        end)
+
+        -- Function to update camera and aim at locked target
+        runService.RenderStepped:Connect(function()
+            if _G.Howl.CurrentTarget then
+                local plr = _G.Howl.CurrentTarget
+                local targetPart = plr.Character[_G.Howl.Aimbot.TargetPart]
+                
+                if targetPart then
+                    -- Check if the player is in an anti-aim state
+                    if not checkAnti(plr) then
+                        local prediction = targetPart.Position + (plr.Character.HumanoidRootPart.Velocity * _G.Howl.Aimbot.Prediction)
+                        local aimCFrame = CFrame.new(camera.CFrame.p, prediction)
+                        camera.CFrame = camera.CFrame:Lerp(aimCFrame, _G.Howl.Aimbot.Amount)
+                    else
+                        local prediction = targetPart.Position + (plr.Character.Humanoid.MoveDirection * plr.Character.Humanoid.WalkSpeed * _G.Howl.Aimbot.Prediction)
+                        local aimCFrame = CFrame.new(camera.CFrame.p, prediction)
+                        camera.CFrame = camera.CFrame:Lerp(aimCFrame, _G.Howl.Aimbot.Amount)
+                    end
+                end
+            end
+        end)
+
+        -- Mark the script as loaded
+        _G.Howl.Loaded = true
+    end
+end)
+
+-- Notify if script loading fails
+if not success then
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Howl Error",
+        Text = "Script failed to load: " .. errorMessage,
+        Duration = 5
+    })
+end
+
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "SilentAim",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/heyex0455/uasfhouifhohojhfsajHFUIfh8023hf2lsaf/refs/heads/main/IASDMKASFHNohfo8923f23ffsafs"))()
+   end,
+})
