@@ -42,7 +42,7 @@ local Button = Tab:CreateButton({
    -- Initialize the settings table with necessary parameters
 _G.Howl = {
     Aimbot = {
-        Keybind = Enum.KeyCode.X,  -- Default key to toggle aimbot lock
+        Keybind = Enum.KeyCode.T,  -- Default key to toggle aimbot lock
         AimBotSkid = 0.187,
         Prediction = 0.1247724521,
         ShakeEnabled = false,
@@ -50,10 +50,10 @@ _G.Howl = {
         Amount = 0.160145,
         Style = "Back",  -- Aim style
         Direction = "Inout",  -- Direction of aim movement
-        TargetPart = "HumanoidRootPart",  -- Default target part to aim at
+        TargetPart = "Head",  -- Default target part to aim at
     },
     ['HitBox'] = {
-        Part = "HumanoidRootPart",  -- Targeting box to aim at
+        Part = "Head",  -- Targeting box to aim at
     },
     ['Resolver'] = {
         Enabled = true,
