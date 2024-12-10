@@ -37,12 +37,12 @@ local Window = Rayfield:CreateWindow({
 local Tab = Window:CreateTab("AIMLOCK TAB", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
-   Name = "HAHAAHAH",
+   Name = "Lock",
    Callback = function()
    -- Initialize the settings table with necessary parameters
 _G.Howl = {
     Aimbot = {
-        Keybind = Enum.KeyCode.C,  -- Default key to toggle aimbot lock
+        Keybind = Enum.KeyCode.V,  -- Default key to toggle aimbot lock
         AimBotSkid = 0.187,
         Prediction = 0.1247724521,
         ShakeEnabled = false,
