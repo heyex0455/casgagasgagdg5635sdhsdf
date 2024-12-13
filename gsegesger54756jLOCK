@@ -1,7 +1,7 @@
 -- Initialize the settings table with necessary parameters
 _G.Howl = {
     Aimbot = {
-        Keybind = Enum.UserInputType.MouseButton2,  -- Change to right-click (MouseButton2)
+        Keybind = Enum.KeyCode.X,  -- Change to "X" key
         AimBotSkid = 0.187,
         Prediction = 0.1247724521,
         ShakeEnabled = false,
@@ -9,7 +9,7 @@ _G.Howl = {
         Amount = 0.160145,
         Style = "Back",  -- Aim style
         Direction = "Inout",  -- Direction of aim movement
-        TargetPart = "HumanoidRootPart",  -- Default target part to aim at
+        TargetPart = "Head",  -- Default target part to aim at
     },
     ['HitBox'] = {
         Part = "HumanoidRootPart",  -- Targeting box to aim at
@@ -82,10 +82,10 @@ local success, errorMessage = pcall(function()
             return closestPlr
         end
 
-        -- Toggle locking mechanism based on right-click (MouseButton2)
+        -- Toggle locking mechanism based on the "X" key
         userInputService.InputBegan:Connect(function(input, processed)
             if not processed then
-                if input.UserInputType == _G.Howl.Aimbot.Keybind then  -- Checking for right-click
+                if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.X then  -- Checking for "X" key
                     locking = not locking
                     if locking then
                         local target = getClosestPlayerToCursor()
